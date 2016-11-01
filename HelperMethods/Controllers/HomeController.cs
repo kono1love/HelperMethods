@@ -5,7 +5,6 @@ namespace HelperMethods.Controllers
 {
     public class HomeController : Controller
     {
-        // GET: Home
         public ActionResult Index()
         {
             ViewBag.Fruits = new string[] { "Apple", "Orange", "Pear" };
@@ -21,7 +20,7 @@ namespace HelperMethods.Controllers
         [HttpPost]
         public ActionResult CreatePerson(Person person)
         {
-            return View(person);
+            return View("DisplayPerson", person);
         }
     }
 }
