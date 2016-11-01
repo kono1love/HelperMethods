@@ -9,21 +9,32 @@ namespace HelperMethods.Controllers
 {
     public class PeopleController : Controller
     {
+        private Person[] personData =
+                {
+            new Person {FirstName="Adam", LastName="Vseravnov", Role = Role.Admin },
+             new Person {FirstName="Vlad", LastName="Konovalov", Role = Role.User },
+              new Person {FirstName="WhatIsLove", LastName="Kono1love", Role = Role.User },
+               new Person {FirstName="Kot", LastName="Babaduk", Role = Role.Guest }
+        };
         public ActionResult Index()
         {
-            ViewBag.Fruits = new string[] { "Apple", "Orange", "Pear" };
-            ViewBag.Cities = new string[] { "New York", "London", "Paris" };
-            string message = "This is an HTML elemt: <input>";
-            return View((object)message);
+            return View();
         }
-        public ActionResult CreatePerson()
+        
+        public PartialViewResult GetPeopleData(string selectedRole = "All")
         {
-            return View(new Person());
+            IEnumerable<Person> data = personData;
+            if(selectedRole != "All")
+            {
+                Role selected = (Role)Enum.Parse(typeof(Role), selectedRole);
+                data = personData.Where(p => p.Role == selected);
+            }
+            return PartialView(data);
         }
-        [HttpPost]
-        public ActionResult CreatePerson(Person person)
+        public ActionResult GetPeople(string selectedRole = "All")
         {
-            return View(person);
+            return View((object)selectedRole);
         }
+        
     }
 }
