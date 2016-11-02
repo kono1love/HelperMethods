@@ -1,16 +1,26 @@
 ﻿@using HelperMethods.Models
 @model string
 @{
-        ViewBag.Title = "GetPeople";
-        Layout = "/Views/Shared/_Layout.cshtml";
-        AjaxOptions ajaxOpts = new AjaxOptions {
-            UpdateTargetId = "tableBody",
-            Url = Url.Action("GetPeopleData"),
-            LoadingElementId = "loading",
-            LoadingElementDuration = 1000,
-            Confirm = "Do you wish to request new data?"
+    ViewBag.Title = "GetPeople";
+    Layout = "/Views/Shared/_Layout.cshtml";
+    AjaxOptions ajaxOpts = new AjaxOptions {
+        UpdateTargetId = "tableBody",
+        Url = Url.Action("GetPeopleData"),
+        LoadingElementId = "loading",
+        LoadingElementDuration = 1000,
+        OnSuccess = "processData"
     };
 }
+ <script type="text/javascript">
+     function processData(data) {
+         var target = $("#tableBody");
+         target.empty();
+         for (var i = 0; i < data.length; i++) {
+             var person = data[i];
+             target.append("<tr><td>" + person.FirstName + "</td><td>" + person.LastName + "</td><td>" + person.Role + "</td></tr>");
+         }
+     }
+ </script>
 
 <h2>Get People</h2>
 <div id="loading" class="load" style="display:none">
@@ -33,11 +43,11 @@
 }
 <div>
     @foreach (string role in Enum.GetNames(typeof(Role)))
-    {
-        <div class="ajaxLink">
-@Ajax.ActionLink(role, "GetPeopleData", new { selectedRole = role },
-    new AjaxOptions { UpdateTargetId = "tableBody",
-        Url = Url.Action("GetPeopleData", new { selectedRole = role })
+    {<div class="ajaxLink">
+    @Ajax.ActionLink(role, "GetPeople",
+    new { selectedRole = role },
+    new AjaxOptions { Url = Url.Action("GetPeopleData", new { selectedRole = role }),
+        
     })
         </div>
     }
